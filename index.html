@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>레브건설 - 당신이 꿈꾸던 새로운 삶을 시작합니다</title>
+    
+    <!-- 폰트 및 아이콘 로드 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* [디자인 시스템 및 전역 설정] */
+        :root {
+            --color-primary: #8A2BE2; 
+            --color-primary-dark: #6A1B9A; 
+            --color-bg-white: #FFFFFF;
+            --color-bg-gray: #F8F9FA;
+            --color-bg-blue: #F3E5F5; 
+            --color-text-dark: #333333;
+            --color-text-muted: #666666;
+            --font-main: 'Noto Sans KR', sans-serif;
+            --color-point-blue: #007BFF;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-main);
+            color: var(--color-text-dark);
+            line-height: 1.6;
+            background-color: var(--color-bg-white);
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        a { text-decoration: none; color: inherit; }
+        ul { list-style: none; }
+        img { max-width: 100%; height: auto; display: block; }
+
+        section { padding: 80px 20px; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .section-title { text-align: center; font-size: 2rem; font-weight: 700; margin-bottom: 40px; position: relative; }
+        .section-title::after { content: ''; display: block; width: 50px; height: 3px; background-color: var(--color-primary); margin: 15px auto 0; }
+
+        /* 1. Header */
+        header { position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; padding: 20px; transition: all 0.3s ease; color: #FFFFFF; }
+        header.scrolled { background-color: var(--color-bg-white); color: var(--color-text-dark); box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); padding: 15px 20px; }
+        .nav-container { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.5rem; font-weight: 700; }
+        .nav-links { display: none; gap: 25px; }
+        .nav-links a:hover { color: var(--color-primary); }
+
+        /* 2. Hero Section */
+        .hero {
+            height: 100vh;
+            background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://images.unsplash.com/photo-1540541338287-41700207dee6?auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: var(--color-bg-white);
+            padding: 0 20px;
+            position: relative;
+        }
+        .hero h2 { font-size: 1.5rem; color: var(--color-primary); margin-bottom: 15px; }
+        .hero h1 { font-size: 2.5rem; margin-bottom: 20px; word-break: keep-all; }
+        .scroll-indicator { position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%); animation: bounce 2s infinite; font-size: 24px; }
+        @keyframes bounce { 0%, 20%, 50%, 80%, 100% { transform: translateY(0) translateX(-50%); } 40% { transform: translateY(-20px) translateX(-50%); } 60% { transform: translateY(-10px) translateX(-50%); } }
+
+        /* 3. About Us */
+        .about-grid { display: grid; grid-template-columns: 1fr; gap: 40px; align-items: center; }
+        .about-text h3 { font-size: 1.8rem; margin-bottom: 20px; }
+        .about-image img { border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+
+        /* 4. Products */
+        .products { background-color: var(--color-bg-gray); }
+        .tabs { display: flex; justify-content: center; gap: 10px; margin-bottom: 40px; flex-wrap: wrap; }
+        .tab-btn { padding: 12px 24px; border: 1px solid #ddd; border-radius: 30px; cursor: pointer; transition: all 0.3s; color: var(--color-text-muted); background: none; }
+        .tab-btn.active, .tab-btn:hover { background-color: var(--color-primary); color: var(--color-bg-white); border-color: var(--color-primary); }
+        .tab-content { display: none; opacity: 0; transition: opacity 0.5s ease; }
+        .tab-content.active { display: grid; opacity: 1; grid-template-columns: 1fr; gap: 30px; align-items: center; }
+        .tab-text h4 { font-size: 1.5rem; margin-bottom: 15px; color: var(--color-primary); }
+        .tab-image img { border-radius: 8px; }
+
+        /* 5. Reference Section */
+        .reference-grid { display: grid; grid-template-columns: 1fr; gap: 30px; }
+        .reference-card { background-color: var(--color-bg-white); border-radius: 12px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.08); transition: transform 0.3s ease; }
+        .reference-card:hover { transform: translateY(-10px); }
+        .reference-img-box { overflow: hidden; height: 250px; }
+        .reference-img-box img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
+        .reference-card:hover .reference-img-box img { transform: scale(1.1); }
+        .reference-info { padding: 25px; text-align: center; }
+        .reference-info span { display: block; color: var(--color-primary); font-size: 0.9rem; font-weight: 700; margin-bottom: 8px; }
+        .reference-info h4 { font-size: 1.3rem; margin-bottom: 10px; }
+
+        /* 6. Video Section (리조트라이프) */
+        .video-section { background-color: var(--color-bg-gray); }
+        .video-wrapper { 
+            max-width: 1000px; 
+            margin: 0 auto; 
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            border-radius: 12px;
+            overflow: hidden;
+            background: #000;
+        }
+        .video-container { padding:56.25% 0 0 0; position:relative; }
+        .video-container iframe { position:absolute; top:0; left:0; width:100%; height:100%; }
+
+        /* 7. Services (Accordion Layout with Arrows) */
+        .accordion-container { max-width: 800px; margin: 0 auto 60px; }
+        .accordion-item { border: 1px solid #eee; border-radius: 12px; overflow: hidden; background: var(--color-bg-white); transition: all 0.3s ease; }
+        .accordion-item.active { border-color: var(--color-primary); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+        
+        .accordion-header { padding: 20px 25px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: background 0.3s; }
+        .accordion-header:hover { background-color: var(--color-bg-gray); }
+        .accordion-header:hover i { color: var(--color-point-blue); }
+
+        .header-left { display: flex; align-items: center; gap: 20px; }
+        .header-left i { font-size: 1.8rem; color: var(--color-primary); transition: color 0.3s ease; }
+        .header-left h4 { font-size: 1.2rem; font-weight: 700; }
+        
+        .header-right i { transition: transform 0.3s ease; color: #ccc; }
+        .accordion-item.active .header-right i { transform: rotate(180deg); color: var(--color-primary); }
+
+        .accordion-content { max-height: 0; opacity: 0; overflow: hidden; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); background: #fff; }
+        .accordion-item.active .accordion-content { max-height: 400px; opacity: 1; padding: 0 25px 25px 65px; }
+        .accordion-content p { color: var(--color-text-muted); font-size: 1rem; line-height: 1.8; word-break: keep-all; }
+
+        .flow-arrow {
+            text-align: center;
+            padding: 10px 0;
+            color: var(--color-primary);
+            opacity: 0.4;
+            font-size: 1.2rem;
+            animation: fadeInDown 1.5s infinite;
+        }
+
+        @keyframes fadeInDown {
+            0% { transform: translateY(-5px); opacity: 0.2; }
+            50% { transform: translateY(5px); opacity: 0.5; }
+            100% { transform: translateY(-5px); opacity: 0.2; }
+        }
+
+        .consulting-box { background-color: var(--color-bg-blue); padding: 40px 20px; border-radius: 8px; text-align: center; }
+        .consulting-box p { font-size: 1.2rem; color: var(--color-primary-dark); font-weight: 500; }
+
+        /* 8. Counsel & Location */
+        .counsel-section { background-color: var(--color-bg-gray); }
+        .counsel-grid { display: grid; grid-template-columns: 1fr; gap: 40px; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; margin-bottom: 8px; font-weight: 500; }
+        .form-group input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 4px; font-family: inherit; transition: border-color 0.3s; }
+        .form-group input:focus { outline: none; border-color: var(--color-primary); }
+
+        .submit-btn { width: 100%; padding: 15px; background-color: var(--color-primary); color: #fff; border: none; border-radius: 4px; font-weight: 700; cursor: pointer; transition: background-color 0.3s; }
+        .submit-btn:hover { background-color: var(--color-primary-dark); }
+        .submit-btn:disabled { background-color: #ccc; cursor: not-allowed; }
+        
+        .contact-info { margin-top: 30px; padding-top: 30px; border-top: 1px solid #ddd; }
+        .contact-info p { margin-bottom: 10px; display: flex; align-items: center; gap: 10px; }
+        .contact-info i { color: var(--color-primary); width: 20px; text-align: center; }
+        .map-container { width: 100%; height: 400px; border-radius: 8px; overflow: hidden; position: relative; }
+        .map-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
+
+        /* 9. Footer */
+        footer { background-color: #222222; color: #888888; text-align: center; padding: 40px 20px; }
+
+        @media (min-width: 768px) {
+            .nav-links { display: flex; }
+            .hero h1 { font-size: 3.5rem; }
+            .about-grid { grid-template-columns: 1fr 1fr; }
+            .tab-content.active { grid-template-columns: 1fr 1fr; }
+            .reference-grid { grid-template-columns: repeat(3, 1fr); }
+            .counsel-grid { grid-template-columns: 1fr 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <header id="header">
+        <div class="nav-container">
+            <div class="logo">레브건설</div>
+            <nav class="nav-links">
+                <a href="#about">About</a>
+                <a href="#products">Projects</a>
+                <a href="#reference">Reference</a>
+                <a href="#video">Life</a>
+                <a href="#services">Services</a>
+                <a href="#counsel">Counsel</a>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero" id="home">
+        <h2>레브건설</h2>
+        <h1>당신이 꿈꾸던 새로운 삶을 시작합니다</h1>
+        <a href="#about" class="scroll-indicator"><i class="fa-solid fa-chevron-down"></i></a>
+    </section>
+
+    <section id="about" class="container">
+        <h2 class="section-title">회사 소개</h2>
+        <div class="about-grid">
+            <div class="about-text">
+                <h3>정직한 개발로<br>미래의 가치를 창조합니다.</h3>
+                <p>부동산개발 전문회사 레브건설은 투명하고 정직한 운영 철학을 바탕으로 고객의 성공적인 투자를 이끕니다.</p>
+                <p>특히 필리핀 팔라완을 중심으로 한 글로벌 프로젝트는 자연과 어우러지는 친환경 설계와 차별화된 서비스를 결합하여 독보적인 가치를 제공합니다.</p>
+            </div>
+            <div class="about-image">
+                <img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=800&q=80" alt="레브건설 빌딩">
+            </div>
+        </div>
+    </section>
+
+    <section id="products" class="products">
+        <div class="container">
+            <h2 class="section-title">주요 개발 프로젝트</h2>
+            <div class="tabs">
+                <button class="tab-btn active" data-target="tab1">호텔&amp;리조트</button>
+                <button class="tab-btn" data-target="tab2">수변테마파크</button>
+                <button class="tab-btn" data-target="tab3">휴양형 주거단지</button>
+            </div>
+            <div id="tab1" class="tab-content active">
+                <div class="tab-text">
+                    <h4>팔라완 프라이빗 리조트</h4>
+                    <p>청정 자연 속에서 완벽한 휴식을 제공하는 프리미엄 리조트입니다. 자연 훼손을 최소화한 설계와 인피니티 풀을 갖추어 높은 가치를 제공합니다.</p>
+                </div>
+                <div class="tab-image"><img src="https://images.unsplash.com/photo-1552733407-5d5c46c3bb3b?auto=format&fit=crop&w=800&q=80" alt="엘니도 리조트"></div>
+            </div>
+            <div id="tab2" class="tab-content">
+                <div class="tab-text">
+                    <h4>친환경 수변테마파크</h4>
+                    <p>자연 지형을 그대로 살린 수상 테마파크입니다. 워터 액티비티 시설과 휴게 공간이 어우러져 안정적인 수익 창출의 기반이 됩니다.</p>
+                </div>
+                <div class="tab-image"><img src="https://images.unsplash.com/photo-1536690786016-72fc7a346513?auto=format&fit=crop&w=800&q=80" alt="전통 보트"></div>
+            </div>
+            <div id="tab3" class="tab-content">
+                <div class="tab-text">
+                    <h4>하이엔드 휴양형 주거단지</h4>
+                    <p>은퇴 후 여유로운 삶이나 장기 체류를 원하는 고객을 위한 맞춤형 주거단지입니다. 스마트홈 시스템과 컨시어지 서비스가 결합되어 있습니다.</p>
+                </div>
+                <div class="tab-image"><img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=800&q=80" alt="휴양형 주거"></div>
+            </div>
+        </div>
+    </section>
+
+    <section id="reference" class="container">
+        <h2 class="section-title">대표 사업 실적</h2>
+        <div class="reference-grid">
+            <article class="reference-card">
+                <div class="reference-img-box"><img src="https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?auto=format&fit=crop&w=800&q=80" alt="리조트 실적"></div>
+                <div class="reference-info"><span>Resort & Spa</span><h4>팔라완 오션 뷰 리조트</h4><p>자연 지형을 극대화한 건축 설계</p></div>
+            </article>
+            <article class="reference-card">
+                <div class="reference-img-box"><img src="https://images.unsplash.com/photo-1544191714-883a30ef4b20?auto=format&fit=crop&w=800&q=80" alt="요트 클럽"></div>
+                <div class="reference-info"><span>Marina Project</span><h4>엘니도 럭셔리 요트 클럽</h4><p>최첨단 정박 시스템 및 편의시설</p></div>
+            </article>
+            <article class="reference-card">
+                <div class="reference-img-box"><img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=800&q=80" alt="풀빌라"></div>
+                <div class="reference-info"><span>Private Villa</span><h4>수변 프라이빗 풀빌라</h4><p>개인 맞춤형 하이엔드 주거 설계</p></div>
+            </article>
+        </div>
+    </section>
+
+    <section id="video" class="video-section">
+        <div class="container">
+            <h2 class="section-title">리조트라이프</h2>
+            <div class="video-wrapper">
+                <div class="video-container">
+                    <iframe src="https://player.vimeo.com/video/1185156500?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479" frameborder="0" allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share" referrerpolicy="strict-origin-when-cross-origin" title="리조트라이프 영상"></iframe>
+                </div>
+            </div>
+        </div>
+    </section>
+    <script src="https://player.vimeo.com/api/player.js"></script>
+
+    <section id="services" class="container">
+        <h2 class="section-title">레브건설의 약속</h2>
+        <div class="accordion-container">
+            <div class="accordion-item active">
+                <div class="accordion-header">
+                    <div class="header-left">
+                        <i class="fa-solid fa-map-location-dot"></i>
+                        <h4>01. 부지 조사</h4>
+                    </div>
+                    <div class="header-right"><i class="fa-solid fa-chevron-down"></i></div>
+                </div>
+                <div class="accordion-content">
+                    <p>개발의 첫 단추인 부지 선정 단계에서는 지형적 특성뿐만 아니라 현지 법적 규제, 인프라 연결성 등을 정밀 분석합니다. 레브건설만의 정교한 알고리즘을 통해 사업의 실현 가능성을 진단하여 투자 리스크를 최소화합니다.</p>
+                </div>
+            </div>
+            <div class="flow-arrow"><i class="fa-solid fa-chevron-down"></i></div>
+            <div class="accordion-item">
+                <div class="accordion-header">
+                    <div class="header-left">
+                        <i class="fa-solid fa-file-signature"></i>
+                        <h4>02. 인허가 검토</h4>
+                    </div>
+                    <div class="header-right"><i class="fa-solid fa-chevron-down"></i></div>
+                </div>
+                <div class="accordion-content">
+                    <p>필리핀 현지 법령 및 환경 규제에 따른 행정 절차를 사전에 철저히 검토합니다. 복잡한 인허가 과정을 전문 네트워크를 통해 신속하게 처리하여 프로젝트의 지연 없는 진행을 보장합니다.</p>
+                </div>
+            </div>
+            <div class="flow-arrow"><i class="fa-solid fa-chevron-down"></i></div>
+            <div class="accordion-item">
+                <div class="accordion-header">
+                    <div class="header-left">
+                        <i class="fa-solid fa-compass-drafting"></i>
+                        <h4>03. 개발 계획</h4>
+                    </div>
+                    <div class="header-right"><i class="fa-solid fa-chevron-down"></i></div>
+                </div>
+                <div class="accordion-content">
+                    <p>토지의 가치를 극대화할 수 있는 마스터플랜을 수립합니다. 친환경 건축 설계와 최적의 용적률 산출을 통해 심미적 완성도는 물론, 투자 자산으로서의 수익 가치를 동시에 확보합니다.</p>
+                </div>
+            </div>
+            <div class="flow-arrow"><i class="fa-solid fa-chevron-down"></i></div>
+            <div class="accordion-item">
+                <div class="accordion-header">
+                    <div class="header-left">
+                        <i class="fa-solid fa-helmet-safety"></i>
+                        <h4>04. 시공 감리</h4>
+                    </div>
+                    <div class="header-right"><i class="fa-solid fa-chevron-down"></i></div>
+                </div>
+                <div class="accordion-content">
+                    <p>착공부터 준공까지 모든 공정을 투명하고 체계적으로 관리합니다. 엄격한 품질 검사와 현장 안전 감리를 통해 설계 도서에 부합하는 최상의 품질을 구현하며 고객과의 약속을 실현합니다.</p>
+                </div>
+            </div>
+        </div>
+        <div class="consulting-box">
+            <p>고객의 자산 및 활용 용도에 맞춘 세밀한 컨설팅으로 차별화된 만족감을 약속합니다.</p>
+        </div>
+    </section>
+
+    <!-- 8. Counsel & Location -->
+    <section id="counsel" class="counsel-section">
+        <div class="container">
+            <h2 class="section-title">상담 및 오시는 길</h2>
+            <div class="counsel-grid">
+                <div>
+                    <!-- ID 부여 및 제출 핸들러 변경 -->
+                    <form id="consultationForm">
+                        <div class="form-group">
+                            <label for="name">이름</label>
+                            <input type="text" name="name" id="name" placeholder="홍길동" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="age">나이</label>
+                            <input type="number" name="age" id="age" placeholder="예: 45" min="1" max="120" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">연락처</label>
+                            <input type="tel" name="phone" id="phone" placeholder="010-0000-0000" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="date">방문 희망일자</label>
+                            <input type="date" name="date" id="date" required>
+                        </div>
+                        <button type="submit" class="submit-btn" id="submitBtn">상담 신청하기</button>
+                    </form>
+                    <div class="contact-info">
+                        <p><i class="fa-regular fa-clock"></i> 평일 10:00 ~ 18:00</p>
+                        <p><i class="fa-solid fa-phone"></i> 02-3124-1881</p>
+                        <p><i class="fa-solid fa-location-dot"></i> 서울시 강남구 테헤란로 507</p>
+                    </div>
+                </div>
+                <div class="map-container"><iframe src="https://maps.google.com/maps?q=서울시%20강남구%20테헤란로%20507&t=&z=16&ie=UTF8&iwloc=&output=embed"></iframe></div>
+            </div>
+        </div>
+    </section>
+
+    <footer><p>Copyright 2026 레브건설. All rights reserved.</p></footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const header = document.getElementById('header');
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 50) header.classList.add('scrolled');
+                else header.classList.remove('scrolled');
+            });
+
+            // Tab Navigation
+            const tabBtns = document.querySelectorAll('.tab-btn');
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    tabBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    const target = btn.getAttribute('data-target');
+                    tabContents.forEach(c => c.classList.remove('active'));
+                    setTimeout(() => document.getElementById(target).classList.add('active'), 50);
+                });
+            });
+
+            // Accordion Logic
+            const accordionItems = document.querySelectorAll('.accordion-item');
+            accordionItems.forEach(item => {
+                const header = item.querySelector('.accordion-header');
+                header.addEventListener('click', () => {
+                    const isActive = item.classList.contains('active');
+                    accordionItems.forEach(i => i.classList.remove('active'));
+                    if (!isActive) {
+                        item.classList.add('active');
+                    }
+                });
+            });
+
+            // 상담 신청 폼 제출 로직 (Google Apps Script 연동)
+            const consultationForm = document.getElementById('consultationForm');
+            const submitBtn = document.getElementById('submitBtn');
+            
+            // 수정됨: scriptURL을 문자열로 감싸기 위해 따옴표 추가
+            const scriptURL = 'https://script.google.com/macros/s/AKfycbyC9ODHeF1Rn5FCqmqEySHbyc1t28R4SlTcNE--yAOSVWCoZMBHW-nPHdsvPSXVDQZd4g/exec';
+
+            consultationForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                if (scriptURL === 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE' || !scriptURL) {
+                    alert('상담 신청을 완료하려면 Google Apps Script 웹 앱 URL을 설정해야 합니다.');
+                    return;
+                }
+
+                // 버튼 상태 변경
+                submitBtn.disabled = true;
+                submitBtn.innerText = '전송 중...';
+
+                // 폼 데이터 수집
+                const formData = new FormData(consultationForm);
+                const data = {
+                    name: formData.get('name'),
+                    age: formData.get('age'),
+                    phone: formData.get('phone'),
+                    date: formData.get('date')
+                };
+
+                try {
+                    // 구글 시트로 데이터 전송
+                    const response = await fetch(scriptURL, {
+                        method: 'POST',
+                        mode: 'no-cors', // Apps Script로 보낼 때 종종 필요한 설정
+                        cache: 'no-cache',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(data)
+                    });
+
+                    // mode: 'no-cors' 상태에서는 response.ok가 거짓이므로 접수 성공으로 간주하거나 추가 처리 필요
+                    alert('상담 신청이 접수되었습니다. (네트워크 환경에 따라 구글 시트 반영까지 시간이 걸릴 수 있습니다.)');
+                    consultationForm.reset();
+
+                } catch (error) {
+                    console.error('Error!', error.message);
+                    alert('일시적인 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.');
+                } finally {
+                    submitBtn.disabled = false;
+                    submitBtn.innerText = '상담 신청하기';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
